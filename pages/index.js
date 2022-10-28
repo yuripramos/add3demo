@@ -32,7 +32,6 @@ export default function Home() {
     }
   };
 
-  console.log({ metaMaskHooks });
   return (
     <>
       <div className="justify-end m-5">
