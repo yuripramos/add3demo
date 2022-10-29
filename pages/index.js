@@ -7,6 +7,7 @@ export default function Home() {
   const { connector } = useWeb3React();
   const [error, setError] = useState('');
   const [mintAddress, setMintAddress] = useState(null);
+  const [isTransferConfirmed, setIsTransferConfirmed] = useState(null);
 
   const isActive = metaMaskHooks.useIsActive();
   const account = metaMaskHooks.useAccount();
@@ -35,7 +36,7 @@ export default function Home() {
 
   return (
     <>
-      {mintAddress && (
+      {mintAddress && isTransferConfirmed && (
         <div className="bg-green-400 text-center text-white p-2">
           minted tokens to address {mintAddress}
         </div>
@@ -68,7 +69,11 @@ export default function Home() {
       </div>
       <div className="flex flex-col items-center justify-start">
         {error && <span>{error}</span>}
-        <TokenInfo setMintAddress={setMintAddress} mintAddress={mintAddress} />
+        <TokenInfo
+          setMintAddress={setMintAddress}
+          mintAddress={mintAddress}
+          setIsTransferConfirmed={setIsTransferConfirmed}
+        />
       </div>
     </>
   );
