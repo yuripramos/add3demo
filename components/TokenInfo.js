@@ -1,13 +1,13 @@
 import react, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { metaMaskHooks } from '../components/wallet/connectors';
 import MintButton from './MintButton';
 const abiContract = require('../abi/abi.json');
 
-const TokenInfo = () => {
+const TokenInfo = ({ mintAddress, setMintAddress }) => {
   const [balance, setBalance] = useState();
   const account = metaMaskHooks.useAccount();
-  const [mintAddress, setMintAddress] = useState('');
+
   const [chainName, setChainName] = useState();
   const [chainId, setChainId] = useState();
   const [symbol, setSymbol] = useState('');
@@ -19,8 +19,8 @@ const TokenInfo = () => {
     if (!account || !ethers.utils.isAddress(account)) return;
     if (!window.ethereum) return;
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-
     const signer = provider.getSigner(account);
+    const contract = new ethers.Contract(contractAddress, abiContract, signer);
 
     provider.getBalance(account).then((result) => {
       setBalance(ethers.utils.formatEther(result));
@@ -32,10 +32,14 @@ const TokenInfo = () => {
       setChainName(result.name);
     });
 
-    const contract = new ethers.Contract(contractAddress, abiContract, signer);
+    if (mintAddress) {
+      contract.mint(mintAddress, BigNumber.from('4'));
+      setMintAddress(false);
+    }
 
     const symbol = await contract.symbol();
     const name = await contract.name();
+
     setName(name);
     setSymbol(symbol);
   }, [account, mintAddress]);

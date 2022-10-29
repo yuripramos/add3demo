@@ -6,6 +6,7 @@ import TokenInfo from '../components/TokenInfo';
 export default function Home() {
   const { connector } = useWeb3React();
   const [error, setError] = useState('');
+  const [mintAddress, setMintAddress] = useState(null);
 
   const isActive = metaMaskHooks.useIsActive();
   const account = metaMaskHooks.useAccount();
@@ -34,7 +35,12 @@ export default function Home() {
 
   return (
     <>
-      <div className="justify-end m-5">
+      {mintAddress && (
+        <div className="bg-green-400 text-center text-white p-2">
+          minted tokens to address {mintAddress}
+        </div>
+      )}
+      <div className="grid justify-items-end m-10">
         {!isActive ? (
           <button
             onClick={connect}
@@ -62,7 +68,7 @@ export default function Home() {
       </div>
       <div className="flex flex-col items-center justify-start">
         {error && <span>{error}</span>}
-        <TokenInfo />
+        <TokenInfo setMintAddress={setMintAddress} mintAddress={mintAddress} />
       </div>
     </>
   );
